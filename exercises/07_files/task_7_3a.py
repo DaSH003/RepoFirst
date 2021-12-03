@@ -40,3 +40,18 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+def sorting(val):
+    return int(val[0])
+
+f = open("CAM_table.txt", 'r')
+lines = f.readlines()
+for i in range(len(lines)):
+    lines[i] = lines[i].split()
+filtered = []
+for i in range(6, len(lines)):
+    filtered.append(lines[i])
+out = ""
+filtered = sorted(filtered, key=sorting)
+for i in range(len(filtered)):
+    out += filtered[i][0] + " "*(9 - len(filtered[i][0])) + filtered[i][1] + " "*6 + filtered[i][3] + "\n"
+print(out)

@@ -17,3 +17,16 @@
 """
 
 ignore = ["duplex", "alias", "configuration"]
+import sys
+filename = sys.argv[1]
+config = open(filename, 'r')
+flag = False
+for i in config:
+    for ig in ignore:
+        if ig in i:
+            flag = True
+    if flag:
+        flag = not flag
+        continue    
+    if "!" != i[0]:
+        print(i, end="")

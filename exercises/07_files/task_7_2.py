@@ -39,3 +39,9 @@ interface Ethernet0/3
 ...
 
 """
+import sys
+filename = sys.argv[1]
+config = open(filename, 'r')
+for i in config:
+    if "!" != i[0]:
+        print(i, end="")

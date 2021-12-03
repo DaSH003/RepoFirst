@@ -17,3 +17,21 @@
 """
 
 ignore = ["duplex", "alias", "configuration"]
+import sys
+filename = sys.argv[1]
+filename_output = sys.argv[2]
+config = open(filename, 'r')
+flag = False
+output = []
+for i in config:
+    for ig in ignore:
+        if ig in i:
+            flag = True
+    if flag:
+        flag = not flag
+        continue
+    if "!" != i[0]:
+        output.append(i)
+out = open(filename_output, 'w')
+for i in output:
+    out.write(i)
