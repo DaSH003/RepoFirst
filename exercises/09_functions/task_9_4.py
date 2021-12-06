@@ -64,3 +64,33 @@ def ignore_command(command, ignore):
         if word in command:
             ignore_status = True
     return ignore_status
+
+def convert_config_to_dict(config_filename):
+    f = open(config_filename, 'r')
+    lines = f.readlines()
+    clear = []
+    response = {}
+    for i in lines:
+        if i[0] == "!" or ignore_command(i, ignore) or i == "\n":
+            continue
+        clear.append(i)
+    items = []
+    for i in range(len(clear)):
+        clear[i] = clear[i][:-1]
+    key = clear.pop(0)
+    for i in range(len(clear)):
+        if clear[i][0] != " ":
+            response.update([(key, items)])
+            items = []
+            key = clear[i]
+            if i == (len(clear)-1):
+                response.update([(key, items)])
+            continue
+        items.append(clear[i][1:])
+    return response
+
+response = convert_config_to_dict("config_sw1.txt")
+for i in response:
+    print(f"{i}:")
+    for j in response[i]:
+        print(f"    {j}")
