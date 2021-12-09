@@ -43,8 +43,36 @@ def parse_cdp_neighbors(command_output):
     и с файлами и с выводом с оборудования.
     Плюс учимся работать с таким выводом.
     """
-
+    response = {}
+    words = command_output.split()
+    prefix = words[0]
+    for i in range(len(prefix)):
+        if prefix[i] == ">":
+            prefix = prefix[:i]
+            break
+    offset = 0
+    for i in range(len(words)):
+        if "/" in words[i]:
+            offset = i - 2
+            break
+    clear = []
+    for i in range(offset, len(words)):
+        clear.append(words[i])
+    sets = []
+    lasti = 0
+    twice = False
+    for i in range(len(clear)):
+        if "/" in clear[i]:
+            if twice:
+                twice = False
+                sets.append(clear[lasti:i+1])
+                lasti = i+1
+            else:
+                twice = True
+    for i in sets:
+        response.update([((f"{prefix}", f"{i[1]}{i[2]}" ),(f"{i[0]}", f"{i[-2]}{i[-1]}"))])
+    return response 
 
 if __name__ == "__main__":
-    with open("sh_cdp_n_sw1.txt") as f:
+    with open("sh_cdp_n_r3.txt") as f:
         print(parse_cdp_neighbors(f.read()))

@@ -73,10 +73,25 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
-
+from draw_network_graph import draw_topology
+from task_11_2 import create_network_map
 infiles = [
     "sh_cdp_n_sw1.txt",
     "sh_cdp_n_r1.txt",
     "sh_cdp_n_r2.txt",
     "sh_cdp_n_r3.txt",
 ]
+
+def unique_network_map(topology_dict):
+    to_remove = []
+    removed = []
+    for i in topology_dict:
+        for j in topology_dict:
+            if i == topology_dict[j]:
+                to_remove.append(i)
+    offset = len(to_remove)//2
+    for i in range(offset):
+        topology_dict.pop(to_remove[i])
+    return topology_dict
+
+draw_topology(unique_network_map(create_network_map(infiles)))  
