@@ -44,3 +44,4 @@ def create_network_map(filenames):
             response.update([(i, responseparse[i])])
     return response
 
+print(create_network_map(infiles))
