@@ -32,4 +32,38 @@ object network LOCAL_10.1.9.5
 
 Во всех правилах для ASA интерфейсы будут одинаковыми (inside,outside).
 """
-def 
+import re
+def convert_ios_nat_to_asa(config_input, config_output):
+	config = open(config_input, 'r')
+	lines = config.readlines()
+	output = ""
+	for line in lines:
+		ip = re.search(r'\d+\.\d+\.\d+\.\d+', line)
+		if ip:
+			ip = ip.group()
+		port = re.search(r'\d+\.\d+\.\d+\.\d+\s(\d+)\s', line)
+		if port:
+			port = port.groups()[0]
+		mode = re.search(r'\w+\s\w+\s(\w+)', line)
+		if mode:
+			mode = mode.groups()[0]
+		prot = re.search(r'(\w+)\s\d+\.\d+\.\d+\.\d+', line)
+		if prot:
+			prot = prot.groups()[0]
+		status = re.search(r'(\w+)\s\w+\s\d+\.\d+\.\d+\.\d+', line) 
+		if status:
+			status = status.groups()[0]
+		smth = re.search(r'^\w+\s(\w+)', line)
+		if smth:
+			smth = smth.groups()[0]
+		nums = re.search(r'(\d+)\s$', line)
+		if nums:
+			nums = nums.groups()[0]
+		if ip and port and mode and prot and status and smth and nums:
+			output += f"object LOCAL_{ip}\n host {ip}\n {smth} ({mode}, outside) {status} interface service {prot} {port} {nums}\n"
+	config.close()
+	config = open(config_output, 'w')
+	config.write(output)
+
+if __name__ == '__main__':
+	convert_ios_nat_to_asa('cisco_nat_config.txt','cisco_nat_config_converted.txt')
