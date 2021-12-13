@@ -34,7 +34,6 @@ def get_ip_from_cfg(filename):
 		match = re.search(r'interface (\S+)', lines[i])
 		if match:
 			port = match.groups()
-			print(port)
 			port = f"{port[0]}"
 			offset = 0
 			for j in range(i, len(lines)):
