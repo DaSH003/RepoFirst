@@ -28,3 +28,32 @@ IP-адреса, диапазоны адресов и так далее, так 
 а не ввод пользователя.
 
 """
+import re
+def get_ip_from_cfg(filename):
+	result = {}
+	f = open(filename, 'r')
+	lines = f.readlines()
+	port = ""
+	for i in range(len(lines)):
+		match = re.search(r'interface (\S+)', lines[i])
+		if match:
+			port = match.groups()
+			print(port)
+			port = f"{port[0]}"
+			offset = 0
+			for j in range(i, len(lines)):
+				if lines[j] == "!\n":
+					offset = j
+					break
+			ip_mask_list = []
+			for k in range(i, offset):
+				ip_mask = re.search(r'ip address (\S+) (\S+)', lines[k])
+				if ip_mask:
+					ip_mask = ip_mask.groups()
+					ip_mask_list.append(ip_mask)
+			if len(ip_mask_list):
+				result.update([(port, ip_mask_list)])
+	return result
+
+if __name__ == "__main__":
+	print(get_ip_from_cfg("config_r2.txt"))
